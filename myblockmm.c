@@ -20,7 +20,6 @@ void *mythreaded_vector_blockmm(void *t);
 char name[128];
 char SID[128];
 #define VECTOR_WIDTH 4
-#define OPTIMAL_BLOCK 128
 void my_threaded_vector_blockmm(double **a, double **b, double **c, int n, int ARRAY_SIZE, int number_of_threads)
 {
   int i=0;
@@ -49,6 +48,7 @@ void my_threaded_vector_blockmm(double **a, double **b, double **c, int n, int A
 }
 
 #define VECTOR_WIDTH 4
+#define OPTIMAL_BLOCK 128
 void *mythreaded_vector_blockmm(void *t)
 {
   register int i, j, k, ii, jj, kk;
