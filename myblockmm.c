@@ -63,8 +63,8 @@ void *mythreaded_vector_blockmm(void *t)
   register int n = tinfo.n;
   while(n > 64)
   {
-    n = n/2;
-  }
+    n = 64;
+  }   
   for(i = (ARRAY_SIZE/number_of_threads)*(tid); i < (ARRAY_SIZE/number_of_threads)*(tid+1); i+=ARRAY_SIZE/n)
   {
     for(j = 0; j < ARRAY_SIZE; j+=(ARRAY_SIZE/n))
