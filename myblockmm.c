@@ -52,7 +52,7 @@ void *mythreaded_vector_blockmm(void *t)
 {
   register int i, j, k, ii, jj, kk;
   register __m256d va, vb, vc;
-  register __m256d va1, va2, va3, va4, vb1, vb2, vb3, vb4, vc1, vc2, vc3, vc4, vc5, vc6, vc7, vc8, vc9, vc10, vc11, vc12, vc13, vc14, vc15, vc16;
+  register __m256d va1, va2, va3, vb1, vb2, vb3, vc1, vc2, vc3, vc4, vc5, vc6, vc7, vc8, vc9;
   register struct thread_info tinfo = *(struct thread_info *)t;
   register int number_of_threads = tinfo.number_of_threads;
   register int tid =  tinfo.tid;
@@ -68,70 +68,47 @@ void *mythreaded_vector_blockmm(void *t)
     {
       for(k = 0; k < ARRAY_SIZE; k+=(ARRAY_SIZE/n))
       {        
-        for(ii = i; ii < i+(ARRAY_SIZE/n); ii+=4)
+        for(ii = i; ii < i+(ARRAY_SIZE/n); ii+=3)
         {
-            for(jj = j; jj < j+(ARRAY_SIZE/n); jj+=VECTOR_WIDTH*4)
+            for(jj = j; jj < j+(ARRAY_SIZE/n); jj+=VECTOR_WIDTH*3)
             {
                 vc1 = _mm256_load_pd(&c[ii][jj]);
                 vc2 = _mm256_load_pd(&c[ii][jj+VECTOR_WIDTH]);
                 vc3 = _mm256_load_pd(&c[ii][jj+VECTOR_WIDTH*2]);
-                vc4 = _mm256_load_pd(&c[ii][jj+VECTOR_WIDTH*3]);
-                vc5 = _mm256_load_pd(&c[ii+1][jj]);
-                vc6 = _mm256_load_pd(&c[ii+1][jj+VECTOR_WIDTH]);
-                vc7 = _mm256_load_pd(&c[ii+1][jj+VECTOR_WIDTH*2]);
-                vc8 = _mm256_load_pd(&c[ii+1][jj+VECTOR_WIDTH*3]);
-                vc9 = _mm256_load_pd(&c[ii+2][jj]);
-                vc10 = _mm256_load_pd(&c[ii+2][jj+VECTOR_WIDTH]);
-                vc11 = _mm256_load_pd(&c[ii+2][jj+VECTOR_WIDTH*2]);
-                vc12 = _mm256_load_pd(&c[ii+2][jj+VECTOR_WIDTH*3]);
-                vc13 = _mm256_load_pd(&c[ii+3][jj]);
-                vc14 = _mm256_load_pd(&c[ii+3][jj+VECTOR_WIDTH]);
-                vc15 = _mm256_load_pd(&c[ii+3][jj+VECTOR_WIDTH*2]);
-                vc16 = _mm256_load_pd(&c[ii+3][jj+VECTOR_WIDTH*3]);
+                vc4 = _mm256_load_pd(&c[ii+1][jj]);
+                vc5 = _mm256_load_pd(&c[ii+1][jj+VECTOR_WIDTH]);
+                vc6 = _mm256_load_pd(&c[ii+1][jj+VECTOR_WIDTH*2]);
+                vc7 = _mm256_load_pd(&c[ii+2][jj]);
+                vc8 = _mm256_load_pd(&c[ii+2][jj+VECTOR_WIDTH]);
+                vc9 = _mm256_load_pd(&c[ii+2][jj+VECTOR_WIDTH*2]);
                     
                 for(kk = k; kk < k+(ARRAY_SIZE/n); kk++)
                 {
                     va1 = _mm256_broadcast_sd(&a[ii][kk]);
                     va2 = _mm256_broadcast_sd(&a[ii+1][kk]);
                     va3 = _mm256_broadcast_sd(&a[ii+2][kk]);
-                    va4 = _mm256_broadcast_sd(&a[ii+3][kk]);
                     vb1 = _mm256_load_pd(&b[kk][jj]);
                     vb2 = _mm256_load_pd(&b[kk][jj+VECTOR_WIDTH]);
                     vb3 = _mm256_load_pd(&b[kk][jj+VECTOR_WIDTH*2]);
-                    vb4 = _mm256_load_pd(&b[kk][jj+VECTOR_WIDTH*3]);
                     vc1 = _mm256_add_pd(vc1,_mm256_mul_pd(va1,vb1));
                     vc2 = _mm256_add_pd(vc2,_mm256_mul_pd(va1,vb2));
                     vc3 = _mm256_add_pd(vc3,_mm256_mul_pd(va1,vb3));
-                    vc4 = _mm256_add_pd(vc4,_mm256_mul_pd(va1,vb4));
-                    vc5 = _mm256_add_pd(vc5,_mm256_mul_pd(va2,vb1));
-                    vc6 = _mm256_add_pd(vc6,_mm256_mul_pd(va2,vb2));
-                    vc7 = _mm256_add_pd(vc7,_mm256_mul_pd(va2,vb3));
-                    vc8 = _mm256_add_pd(vc8,_mm256_mul_pd(va2,vb4));
-                    vc9 = _mm256_add_pd(vc9,_mm256_mul_pd(va3,vb1));
-                    vc10 = _mm256_add_pd(vc10,_mm256_mul_pd(va3,vb2));
-                    vc11 = _mm256_add_pd(vc11,_mm256_mul_pd(va3,vb3));
-                    vc12 = _mm256_add_pd(vc12,_mm256_mul_pd(va3,vb4));
-                    vc13 = _mm256_add_pd(vc13,_mm256_mul_pd(va4,vb1));
-                    vc14 = _mm256_add_pd(vc14,_mm256_mul_pd(va4,vb2));
-                    vc15 = _mm256_add_pd(vc15,_mm256_mul_pd(va4,vb3));
-                    vc16 = _mm256_add_pd(vc16,_mm256_mul_pd(va4,vb4));
+                    vc4 = _mm256_add_pd(vc4,_mm256_mul_pd(va2,vb1));
+                    vc5 = _mm256_add_pd(vc5,_mm256_mul_pd(va2,vb2));
+                    vc6 = _mm256_add_pd(vc6,_mm256_mul_pd(va2,vb3));
+                    vc7 = _mm256_add_pd(vc7,_mm256_mul_pd(va3,vb1));
+                    vc8 = _mm256_add_pd(vc8,_mm256_mul_pd(va3,vb2));
+                    vc9 = _mm256_add_pd(vc9,_mm256_mul_pd(va3,vb3));
                 }
                 _mm256_store_pd(&c[ii][jj],vc1);
                 _mm256_store_pd(&c[ii][jj+VECTOR_WIDTH],vc2);
                 _mm256_store_pd(&c[ii][jj+VECTOR_WIDTH*2],vc3);
-                _mm256_store_pd(&c[ii][jj+VECTOR_WIDTH*3],vc4);
-                _mm256_store_pd(&c[ii+1][jj],vc5);
-                _mm256_store_pd(&c[ii+1][jj+VECTOR_WIDTH],vc6);
-                _mm256_store_pd(&c[ii+1][jj+VECTOR_WIDTH*2],vc7);
-                _mm256_store_pd(&c[ii+1][jj+VECTOR_WIDTH*3],vc8);
-                _mm256_store_pd(&c[ii+2][jj],vc9);
-                _mm256_store_pd(&c[ii+2][jj+VECTOR_WIDTH],vc10);
-                _mm256_store_pd(&c[ii+2][jj+VECTOR_WIDTH*2],vc11);
-                _mm256_store_pd(&c[ii+2][jj+VECTOR_WIDTH*3],vc12);
-                _mm256_store_pd(&c[ii+3][jj],vc13);
-                _mm256_store_pd(&c[ii+3][jj+VECTOR_WIDTH],vc14);
-                _mm256_store_pd(&c[ii+3][jj+VECTOR_WIDTH*2],vc15);
-                _mm256_store_pd(&c[ii+3][jj+VECTOR_WIDTH*3],vc16);
+                _mm256_store_pd(&c[ii+1][jj],vc4);
+                _mm256_store_pd(&c[ii+1][jj+VECTOR_WIDTH],vc5);
+                _mm256_store_pd(&c[ii+1][jj+VECTOR_WIDTH*2],vc6);
+                _mm256_store_pd(&c[ii+2][jj],vc7);
+                _mm256_store_pd(&c[ii+2][jj+VECTOR_WIDTH],vc8);
+                _mm256_store_pd(&c[ii+2][jj+VECTOR_WIDTH*2],vc9);
             }
         }
       }
