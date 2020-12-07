@@ -20,6 +20,7 @@ void *mythreaded_vector_blockmm(void *t);
 char name[128];
 char SID[128];
 #define VECTOR_WIDTH 4
+#define OPTIMAL_BLOCK 128
 void my_threaded_vector_blockmm(double **a, double **b, double **c, int n, int ARRAY_SIZE, int number_of_threads)
 {
   int i=0;
@@ -61,9 +62,9 @@ void *mythreaded_vector_blockmm(void *t)
   register double **c = tinfo.c;
   register int ARRAY_SIZE = tinfo.array_size;
   register int n = tinfo.n;
-  while(n > 128)
+  while(n > OPTIMAL_BLOCK)
   {
-    n = 128;
+    n = OPTIMAL_BLOCK;
   }   
   for(i = (ARRAY_SIZE/number_of_threads)*(tid); i < (ARRAY_SIZE/number_of_threads)*(tid+1); i+=ARRAY_SIZE/n)
   {
