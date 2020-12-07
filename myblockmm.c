@@ -62,10 +62,8 @@ void *mythreaded_vector_blockmm(void *t)
   register double **c = tinfo.c;
   register int ARRAY_SIZE = tinfo.array_size;
   register int n = tinfo.n;
-  while(n > OPTIMAL_BLOCK)
-  {
-    n = OPTIMAL_BLOCK;
-  }   
+  n = n > OPTIMAL_BLOCK ? OPTIMAL_BLOCK : n;  
+    
   for(i = (ARRAY_SIZE/number_of_threads)*(tid); i < (ARRAY_SIZE/number_of_threads)*(tid+1); i+=ARRAY_SIZE/n)
   {
     for(j = 0; j < ARRAY_SIZE; j+=(ARRAY_SIZE/n))
